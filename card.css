@@ -4,6 +4,8 @@ body {
   background: white;
   display: grid;
   grid-template-columns: repeat(auto-fit, 448px);
+  grid-gap: 1em;
+  padding: 1em;
 }
 
 * {
@@ -18,14 +20,37 @@ body {
   font-family: "Roboto Slab", sans-serif;
   font-weight: bold;
 }
+.type,
+.type > * {
+  font-size: 0.8em;
+}
 /* 448x642 */
 .card {
-  display: block;
+  display: grid;
+  grid-template-rows: 1fr auto;
   --ratio: 2px;
   width: calc(var(--ratio) * 224);
   height: calc(var(--ratio) * 321);
+  padding: calc(var(--ratio) * 8);
   /* margin: 1rem; */
   /* padding: 2rem; */
+  position: relative;
+}
+
+.set-symbol {
+  height: 100%;
+}
+
+.card:before {
+  content: "";
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  background-color: #18150c;
+  border-radius: 1rem;
+  position: absolute;
+  z-index: -1;
 }
 
 .white {
@@ -94,17 +119,7 @@ body {
   --bar: #afa369;
 }
 
-.card-border {
-  padding: calc(var(--ratio) * 8);
-  height: 100%;
-  width: 100%;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  background-color: #18150c;
-  border-radius: 1rem;
-}
-
-.color-border {
+.border {
   border-radius: 8px 8px 32px 32px;
   background-image: url(./texture.webp);
   background-blend-mode: multiply;
@@ -112,6 +127,14 @@ body {
   background-color: var(--background);
   max-height: 100%;
   font-size: calc(var(--ratio) * 9.5);
+  display: grid;
+  grid-template-rows: repeat(5, auto);
+}
+
+.planeswalker .card-image {
+  border-width: calc(var(--ratio) * 3);
+  border-radius: calc(var(--ratio) * 10) / calc(var(--ratio) * 100);
+  margin: 0 calc(var(--ratio));
 }
 
 .card-image {
@@ -140,9 +163,11 @@ body {
   padding: calc(var(--ratio) * 2) calc(var(--ratio) * 4);
   grid-template-columns: 1fr auto;
   align-items: center;
-  box-shadow: /*                                                                         */ 
-    inset calc(var(--ratio) * -.1) calc(var(--ratio) * .2) calc(var(--ratio) * 1) rgba(255, 255, 255, 1),
-    inset calc(var(--ratio) * .1) calc(var(--ratio) * -.2) calc(var(--ratio) * 1) rgba(0, 0, 0, 1);
+  box-shadow: /*                                                                         */ inset
+      calc(var(--ratio) * -0.1) calc(var(--ratio) * 0.2) calc(var(--ratio) * 1)
+      rgba(255, 255, 255, 1),
+    inset calc(var(--ratio) * 0.1) calc(var(--ratio) * -0.2)
+      calc(var(--ratio) * 1) rgba(0, 0, 0, 1);
 }
 
 .card-text {
@@ -159,9 +184,14 @@ body {
   padding: calc(var(--ratio) * 4);
   font-family: serif;
   position: relative;
-  box-shadow: 
-  inset calc(var(--ratio) * .1) calc(var(--ratio) * -.2) calc(var(--ratio) * 1) rgba(255, 255, 255, 1),
-  inset calc(var(--ratio) * -.1) calc(var(--ratio) * .2) calc(var(--ratio) * 1) rgba(0, 0, 0, 1);
+  box-shadow: inset calc(var(--ratio) * 0.1) calc(var(--ratio) * -0.2)
+      calc(var(--ratio) * 1) rgba(255, 255, 255, 1),
+    inset calc(var(--ratio) * -0.1) calc(var(--ratio) * 0.2)
+      calc(var(--ratio) * 1) rgba(0, 0, 0, 1);
+}
+
+.planeswalker .card-text {
+  border-left-width: 1em;
 }
 
 .card-text > *:only-child {
@@ -176,9 +206,24 @@ body {
   display: grid;
 }
 
+.planeswalker .oracle {
+  grid-template-columns: 1fr calc(var(--ratio) * 4) auto;
+  align-items: center;
+}
+
+.oracle hr {
+  grid-column: 1/-1;
+}
+
 .oracle,
 .flavour {
   margin: auto 0;
+}
+
+.flavour {
+  font-style: italic;
+  font-size: 0.75em;
+  color: #444;
 }
 
 i:not(.ms) {
@@ -206,20 +251,68 @@ hr {
   opacity: 0.1;
 }
 
+.loyalty {
+  font-size: 2.8em;
+}
+
+.oracle .loyalty-thing {
+  height: 100%;
+  font-size: 2.4em;
+  margin: auto 0 auto -0.75em;
+  display: inline-grid;
+  float: left;
+}
+
+.loyalty,
+.loyalty-thing {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  place-items: center;
+}
+
+.loyalty-thing > .ms {
+  -webkit-text-stroke: calc(var(--ratio) * 1) #eee;
+  color: #111;
+}
+.loyalty-thing > span {
+  font-size: calc(1em / 2.8);
+  font-weight: bold;
+  color: white;
+  z-index: 2;
+}
+
+.ms-loyalty-start + span {
+  margin-bottom: 0.2em;
+}
+.ms-loyalty-down + span {
+  margin-bottom: 0.5em;
+}
+
+.loyalty-thing > * {
+  grid-column: 1/-1;
+  grid-row: 1/-1;
+}
+
 .pt {
-  position: absolute;
-  bottom: calc(var(--ratio) * -12);
-  right: calc(var(--ratio) * -4);
-  margin: calc(var(--ratio) * 4) calc(var(--ratio));
   border-radius: calc(var(--ratio) * 6) / calc(var(--ratio) * 16);
   border: calc(var(--ratio) * 1) solid var(--border);
   background: var(--bar);
-  padding: calc(var(--ratio) * 0.25) calc(var(--ratio) * 6);
   font-size: 1.2em;
+  margin: calc(var(--ratio) * 4) calc(var(--ratio));
+  padding: calc(var(--ratio) * 0.25) calc(var(--ratio) * 6);
   box-shadow: inset calc(var(--ratio)) calc(var(--ratio) * -0.75) 0
       rgba(255, 255, 255, 0.3),
     inset calc(var(--ratio)) calc(var(--ratio) * -1) 0 rgba(0, 0, 0, 0.3),
     inset calc(var(--ratio) * -0.75) calc(var(--ratio) * 1) 0 rgba(0, 0, 0, 0.7);
+}
+
+.pt,
+.loyalty {
+  position: absolute;
+  float: right;
+  bottom: calc(var(--ratio) * -12);
+  right: calc(var(--ratio) * -4);
 }
 
 .pt > * {
