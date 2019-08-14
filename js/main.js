@@ -36,9 +36,10 @@ const dataCols = {
     "toughness": 11,
     "loyalty": 12,
     "color_identity": 13,
-    "art": 15,
-    "artist": 16,
-    "flavour": 17
+    "watermark": 15,
+    "art": 17,
+    "artist": 18,
+    "flavour": 19
 };
 const tsvURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQ5wlrazSE80LIK94JgVbm6h_EvPjwT4nkBQbAiPSJiO6wzY8yVhzkhfA-tETI0zuhHH841f6tQwXJ/pub?gid=50856066&single=true&output=tsv';
 let cardDb = {};
@@ -50,7 +51,7 @@ fetch(tsvURL)
 function processRow(rowValues) {
     let cardData = {};
     for (let dataName in dataCols) {
-        if (dataName === `set-symbol` || dataName === `art`) {
+        if (dataName === `set-symbol` || dataName === `art` || dataName === `watermark`) {
             cardData[dataName] = `//drive.google.com/uc?id=${rowValues[dataCols[dataName]]}`;
         } else {
             cardData[dataName] = rowValues[dataCols[dataName]];
@@ -107,6 +108,8 @@ function generateCard(cardData) {
     let typeBar = $(`div`, `bar middle`, [type, setSymbol])
 
     let oracleContent = [];
+    if (cardData["watermark"])
+        oracleContent.push($(`img`, `watermark`, cardData[`watermark`] + " watermark"));
     let lines = cardData["oracle"].replace(`{{CARD NAME}}`, cardData[`name`]).split(`<br>`);
     for (let line of lines) {
         if (planeswalker) {
@@ -125,10 +128,8 @@ function generateCard(cardData) {
         } else {
             oracleContent.push($(`p`, ``, () => line));
         }
-        console.log(oracleContent)
     }
     if (planeswalker) oracleContent.pop();
-    console.log(oracleContent)
     let oracle = $(`div`, `oracle`, oracleContent);
     applyMTGSymbols(oracle);
     oracle.innerHTML = oracle.innerHTML.replace(/ms-shadow/g, "");

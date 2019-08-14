@@ -202,6 +202,14 @@ body {
   padding-bottom: 0.2em;
 }
 
+.watermark {
+  position: absolute;
+  top: 0;
+  left: calc(var(--ratio) * 42);
+  height: 100%;
+  opacity: 0.1;
+}
+
 .oracle {
   display: grid;
 }
