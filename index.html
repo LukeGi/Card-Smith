@@ -71,21 +71,7 @@
 
   <!-- Mana Symbols -->
   <script>
-    function applyMTGSymbols(el) {
-      el.innerHTML = el.innerHTML.replace(
-        /(\{)([wubregcxyz0-9]{1})(\})/gi,
-        (s, a, b, c) => `<i class="ms ms-cost ms-shadow ms-${b}"></i>`.toLowerCase()
-      ).replace(
-        /(\{)(tap)?([tT]?)(\})/gi,
-        (s, a, b, c) => `<i class="ms ms-cost ms-shadow ms-tap"></i>`.toLowerCase()
-      ).replace(
-        /(\{)([wubregcxyz0-9]{1})(\/)([wubregcxyz0-9]{1})(\})/gi,
-        (s, a, b, c, d, e) => `<i class="ms ms-cost ms-shadow ms-${b}${d}"></i>`.toLowerCase()
-      ).replace(
-        /(\{)(art)(\})/gi,
-        (s, a, b, c) => `<i class="ms ms-artist-nib"></i>`.toLowerCase()
-      );
-    }
+    
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.js"></script>
   <script src="./js/main.js"></script>

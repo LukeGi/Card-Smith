@@ -47,6 +47,25 @@ fetch(tsvURL)
     .then(x => x.text())
     .then(processTSV);
 
+function applyMTGSymbols(el) {
+    el.innerHTML = el.innerHTML.replace(
+        /(\{)([wubregcxyz0-9]{1})(\})/gi,
+        (s, a, b, c) => `<i class="ms ms-cost ms-shadow ms-${b}"></i>`.toLowerCase()
+    ).replace(
+        /(\{)(tap)?([tT]?)(\})/gi,
+        (s, a, b, c) => `<i class="ms ms-cost ms-shadow ms-tap"></i>`.toLowerCase()
+    ).replace(
+        /(\{)([wubregcxyz0-9]{1})(\/)([wubregcxyz0-9]{1})(\})/gi,
+        (s, a, b, c, d, e) => `<i class="ms ms-cost ms-shadow ms-${b}${d}"></i>`.toLowerCase()
+    ).replace(
+        /(\{)(art)(\})/gi,
+        (s, a, b, c) => `<i class="ms ms-artist-nib"></i>`.toLowerCase()
+    );
+}
+
+function subCardName(cardEl, name) {
+    cardEl.innerHTML = cardEl.innerHTML.replace(/\{\{CARD NAME\}\}/g, name);
+}
 
 function processRow(rowValues) {
     let cardData = {};
@@ -129,12 +148,12 @@ function generateCard(cardData) {
             oracleContent.push($(`p`, ``, () => line));
         }
     }
+    // Remove the last final hr on a planeswalker
     if (planeswalker) oracleContent.pop();
     let oracle = $(`div`, `oracle`, oracleContent);
-    applyMTGSymbols(oracle);
-    oracle.innerHTML = oracle.innerHTML.replace(/ms-shadow/g, "");
 
     let flavour = $(`div`, `flavour`, () => cardData["flavour"]);
+    // Add loyalty if planeswalker, or power and toughness if a creature
     let ptl;
     if (planeswalker) {
         ptl = $(`div`, `loyalty loyalty-thing`, [$("i", "ms ms-loyalty-start loyalty-thing"), $(`span`, ``, cardData[`loyalty`])])
@@ -154,6 +173,8 @@ function generateCard(cardData) {
     let cardEl = $(`div`, `card ${color}${planeswalker ? " planeswalker" : ""}`, [cardBorder, collectorInfo]);
 
     applyMTGSymbols(cardEl);
+    subCardName(cardEl, cardData["name"]);
+    oracle.innerHTML = oracle.innerHTML.replace(/ms-shadow/g, "");
     let remove = { ".pt": [".pt"], ".flavour": ["hr", ".flavour"] };
     for (let key in remove) {
         let x = cardEl.querySelector(key);
