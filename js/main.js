@@ -133,17 +133,19 @@ function generateCard(cardData) {
     for (let line of lines) {
         if (planeswalker) {
             let parts = line.split(`:`);
-            let cost = parts[0].trim();
-            if (cost < 0) {
-                oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-down"), $("span", "", cost)]));
-            } else if (cost > 0) {
-                oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-up"), $("span", "", cost)]));
-            } else {
-                oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-zero"), $("span", "", cost)]));
+            if (parts.length == 2) {
+                let cost = parts[0].trim();
+                if (cost < 0) {
+                    oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-down"), $("span", "", cost)]));
+                } else if (cost > 0) {
+                    oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-up"), $("span", "", cost)]));
+                } else {
+                    oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-zero"), $("span", "", cost)]));
+                }
+                oracleContent.push($(`p`, ``, `:`));
+                oracleContent.push($(`p`, ``, parts[1].trim()));
+                oracleContent.push($(`hr`));
             }
-            oracleContent.push($(`p`, ``, `:`));
-            oracleContent.push($(`p`, ``, parts[1].trim()));
-            oracleContent.push($(`hr`));
         } else {
             oracleContent.push($(`p`, ``, () => line));
         }
