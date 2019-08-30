@@ -364,3 +364,71 @@ hr {
 .collector-info > .line * {
   display: inline;
 }
+
+#proxy {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.proxy {
+  border: 2px solid black;
+  display: grid;
+  grid-template-rows: 1fr auto 250px 1rem;
+  --ratio: 2px;
+  width: calc(var(--ratio) * 224);
+  height: calc(var(--ratio) * 321);
+  padding: calc(var(--ratio) * 8);
+  border-radius: 1rem;
+  /* margin: 1rem; */
+  /* padding: 2rem; */
+  position: relative;
+  font-family: 'Roboto';
+}
+
+.proxy-bar {
+  display: flex;
+  justify-content: space-between;
+  margin: -1px calc(var(--ratio) * -2);
+  padding: 0 1rem;
+  height: 30px;
+  width: calc(100% + var(--ratio) * 4);  
+  border-radius: calc(var(--ratio) * 8) / calc(var(--ratio) * 16);
+  border: 1px solid black;
+  line-height: 30px;
+}
+
+.proxy-oracle {
+  display: block;
+  margin: 0 1px;
+  padding: 1rem;
+  height: 250px;
+  border: 1px solid black;
+}
+
+.proxy-line:not(:first-child) {
+  margin-top: 1rem;
+}
+
+.proxy-loyalty {
+  display: block;
+  background-color: white;
+  margin: -15px 0 -1px auto ;
+  padding: 0 1rem;
+  height: 30px;
+  border: 1px solid black;
+  line-height: 30px;
+  text-emphasis: right;
+}
+
+.proxy-pt {
+  display: block;
+  background-color: white;
+  margin: -15px calc(var(--ratio) * -2) -1px auto ;
+  padding: 0 1rem;
+  height: 30px;
+  border-radius: calc(var(--ratio) * 8) / calc(var(--ratio) * 16);
+  border: 1px solid black;
+  line-height: 30px;
+  text-emphasis: right;
+}

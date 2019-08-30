@@ -176,7 +176,7 @@ function generateCard(cardData) {
 
     applyMTGSymbols(cardEl);
     subCardName(cardEl, cardData["name"]);
-    oracle.innerHTML = oracle.innerHTML.replace(/ms-shadow/g, "");
+    cardEl.querySelector(`.oracle`).innerHTML = oracle.innerHTML.replace(/ms-shadow/g, "");
     let remove = { ".pt": [".pt"], ".flavour": ["hr", ".flavour"] };
     for (let key in remove) {
         let x = cardEl.querySelector(key);
@@ -199,3 +199,40 @@ function makeCard(ev) {
     document.body.append(card);
 }
 // document.querySelector('form#cardForm').addEventListener("submit", makeCard);
+
+function generateProxy(cardData) {
+
+    let topbar = $(`div`, `proxy-bar proxy-top`, [$(`p`, `left`, cardData[`name`]), $(`p`, `right`, cardData[`manacost`])])
+
+    let middlebar = $(`div`, `proxy-bar proxy-middle`, [$(`p`, `left`, cardData[`typeline`]), $(`p`, `right`, cardData[`rarity`])])
+
+    let oracle = $(`div`, `proxy-oracle`, cardData[`oracle`].replace(`{{CARD NAME}}`, cardData[`name`]).split(`<br>`).map(line => $(`p`, `proxy-line`, () => line)));
+
+    let ptl;
+
+    if (cardData[`loyalty`]) {
+        ptl = $(`div`, `proxy-loyalty`, cardData[`loyalty`]);
+    } else if (cardData[`power`]) {
+        ptl = $(`div`, `proxy-pt`, `${cardData[`power`]}/${cardData[`toughness`]}`)
+    }
+    console.log(cardData[`loyalty`], cardData[`power`], ptl)
+
+    let proxy = $(`div`, `proxy`, [topbar, middlebar, oracle])
+    if (ptl) proxy.append(ptl);
+    return proxy;
+}
+
+function toggleProxy() {
+    document.querySelectorAll(".card, .proxy").forEach(el => el.remove());
+    if (document.body.classList.toggle(`faketime`)) {
+        // Make Proxies
+        for (let cardName in cardDb) {
+            document.body.append(generateProxy(cardDb[cardName]));
+        }
+    } else {
+        // Make Cards
+        for (let cardName in cardDb) {
+            document.body.append(generateCard(cardDb[cardName]));
+        }
+    }
+}
