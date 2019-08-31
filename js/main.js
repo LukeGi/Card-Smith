@@ -154,6 +154,7 @@ function generateCard(cardData) {
     if (planeswalker) oracleContent.pop();
     let oracle = $(`div`, `oracle`, oracleContent);
     applyMTGSymbols(oracle);
+    subCardName(oracle, cardData["name"])
 
     let flavour = $(`div`, `flavour`, () => cardData["flavour"]);
     // Add loyalty if planeswalker, or power and toughness if a creature
