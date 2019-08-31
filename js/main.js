@@ -153,6 +153,7 @@ function generateCard(cardData) {
     // Remove the last final hr on a planeswalker
     if (planeswalker) oracleContent.pop();
     let oracle = $(`div`, `oracle`, oracleContent);
+    applyMTGSymbols(oracle);
 
     let flavour = $(`div`, `flavour`, () => cardData["flavour"]);
     // Add loyalty if planeswalker, or power and toughness if a creature
