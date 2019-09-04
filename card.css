@@ -216,6 +216,7 @@ body {
 
 .planeswalker .oracle {
   grid-template-columns: 1fr calc(var(--ratio) * 4) auto;
+  grid-auto-rows: auto 4px;
   align-items: center;
 }
 
