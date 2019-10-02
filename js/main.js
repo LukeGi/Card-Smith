@@ -210,7 +210,8 @@ function generateProxy(cardData) {
     } else if (cardData[`power`]) {
         ptl = $(`div`, `proxy-pt`, `${cardData[`power`]}/${cardData[`toughness`]}`)
     }
-    console.log(cardData[`loyalty`], cardData[`power`], ptl)
+    
+    subCardName(oracle, cardData["name"])
 
     let proxy = $(`div`, `proxy`, [topbar, middlebar, oracle])
     if (ptl) proxy.append(ptl);
