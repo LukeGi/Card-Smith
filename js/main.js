@@ -81,10 +81,11 @@ function processRow(rowValues) {
 
 function processTSV(data) {
     let rows = data.split('\n');
+    let id = 0;
     for (let i = 2; i < rows.length; i++) {
         let row = rows[i];
         let cardData = processRow(row.split('\t'));
-        cardDb[cardData["name"]] = cardData;
+        cardDb[id++] = cardData;
     }
     for (let cardName in cardDb) {
         document.body.append(generateCard(cardDb[cardName]));
@@ -191,17 +192,6 @@ function generateCard(cardData) {
     return cardEl;
 }
 
-function makeCard(ev) {
-    ev.preventDefault();
-    let input = ev.srcElement[0];
-    let cardName = input.value;
-    input.value = "";
-    let cardData = cardDb[cardName];
-    let card = generateCard(cardData);
-    document.body.append(card);
-}
-// document.querySelector('form#cardForm').addEventListener("submit", makeCard);
-
 function generateProxy(cardData) {
 
     let topbar = $(`div`, `proxy-bar proxy-top`, [$(`p`, `left`, cardData[`name`]), $(`p`, `right`, cardData[`manacost`])])
@@ -228,13 +218,13 @@ function toggleProxy() {
     document.querySelectorAll(".card, .proxy").forEach(el => el.remove());
     if (document.body.classList.toggle(`faketime`)) {
         // Make Proxies
-        for (let cardName in cardDb) {
-            document.body.append(generateProxy(cardDb[cardName]));
+        for (let cardID in cardDb) {
+            document.body.append(generateProxy(cardDb[cardID]));
         }
     } else {
         // Make Cards
-        for (let cardName in cardDb) {
-            document.body.append(generateCard(cardDb[cardName]));
+        for (let cardID in cardDb) {
+            document.body.append(generateCard(cardDb[cardID]));
         }
     }
 }
