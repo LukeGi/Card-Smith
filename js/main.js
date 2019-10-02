@@ -144,7 +144,9 @@ function generateCard(cardData) {
                     oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-zero"), $("span", "", cost)]));
                 }
                 oracleContent.push($(`p`, ``, `:`));
-                oracleContent.push($(`p`, ``, parts[1].trim()));
+                let abilityText = $(`p`, ``, parts[1].trim());
+                abilityText.style.fontSize = `calc(var(--ratio) * (9.5 - ${abilityText.textContent.length / 100}))`;
+                oracleContent.push(abilityText);
                 oracleContent.push($(`hr`));
             }
         } else {
@@ -154,10 +156,11 @@ function generateCard(cardData) {
     // Remove the last final hr on a planeswalker
     if (planeswalker) oracleContent.pop();
     let oracle = $(`div`, `oracle`, oracleContent);
+
     applyMTGSymbols(oracle);
     subCardName(oracle, cardData["name"])
 
-    let flavour = $(`div`, `flavour`, () => cardData["flavour"]);
+    let flavour = $(`div`, `flavour`, () => cardData[`flavour`]);
     // Add loyalty if planeswalker, or power and toughness if a creature
     let ptl;
     if (planeswalker) {
@@ -167,8 +170,17 @@ function generateCard(cardData) {
         let t = $(`p`, `toughness`, cardData[`toughness`]);
         ptl = $(`div`, `pt`, [p, t])
     }
-    let textBox = $(`div`, `card-text`, [oracle, $(`hr`), flavour, ptl]);
-
+    let textBox = $(`div`, `card-text`);
+    // , [oracle, $(`hr`), flavour, ptl]
+    textBox.append(oracle);
+    if (cardData[`flavour`]) {
+        textBox.append($(`hr`));
+        textBox.append(flavour);
+    }
+    if (cardData[`power`] || cardData[`loyalty`] || cardData[`toughness`]) {
+        textBox.append(ptl);
+    }
+    
     let cardBorder = $(`div`, `border`, [nameBar, art_crop, typeBar, textBox]);
 
     let ciline1 = $(`div`, `line`, () => `${cardData[`id`]}/280 ${cardData["rarity"]}`)
@@ -180,15 +192,6 @@ function generateCard(cardData) {
     applyMTGSymbols(cardEl);
     subCardName(cardEl, cardData["name"]);
     cardEl.querySelector(`.oracle`).innerHTML = oracle.innerHTML.replace(/ms-shadow/g, "");
-    let remove = { ".pt": [".pt"], ".flavour": ["hr", ".flavour"] };
-    for (let key in remove) {
-        let x = cardEl.querySelector(key);
-        if (x && x.textContent.length === 0) {
-            for (let value of remove[key]) {
-                cardEl.querySelector(value).remove();
-            }
-        }
-    }
     return cardEl;
 }
 
