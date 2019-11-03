@@ -41,7 +41,7 @@
         var authorizeButton = document.getElementById('authorize_button');
         var signoutButton = document.getElementById('signout_button');
         const input = document.querySelector("#search_range");
-        input.value = "'Final Database'!B2:T400";
+        input.value = "'Final Database'!B2:T4";
         function loadSheet() {
             if (!new RegExp(input.pattern).test(input.value)) {
                 appendPre("The entered range is not valid.");
