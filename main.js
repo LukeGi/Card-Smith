@@ -41,11 +41,14 @@ const dataCols = {
     "artist": 18,
     "flavour": 19
 };
-const tsvURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQ5wlrazSE80LIK94JgVbm6h_EvPjwT4nkBQbAiPSJiO6wzY8yVhzkhfA-tETI0zuhHH841f6tQwXJ/pub?gid=50856066&single=true&output=tsv';
+const tsvURL = 'Custom MTG Sets - Card database.tsv'//'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQ5wlrazSE80LIK94JgVbm6h_EvPjwT4nkBQbAiPSJiO6wzY8yVhzkhfA-tETI0zuhHH841f6tQwXJ/pub?gid=354795844&single=true&output=tsv';
 let cardDb = {};
 fetch(tsvURL)
     .then(x => x.text())
-    .then(processTSV);
+    .then(processTSV)
+    .then(() => {
+        
+    });
 
 function applyMTGSymbols(el) {
     el.innerHTML = el.innerHTML.replace(
@@ -87,8 +90,10 @@ function processTSV(data) {
         let cardData = processRow(row.split('\t'));
         cardDb[id++] = cardData;
     }
+    let cardEl;
     for (let cardName in cardDb) {
-        document.body.append(generateCard(cardDb[cardName]));
+        cardEl = generateCard(cardDb[cardName]);
+        document.body.appendChild(cardEl);
     }
 }
 

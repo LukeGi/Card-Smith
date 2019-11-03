@@ -1,3 +1,4 @@
+@import url("//cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css");
 @import url("https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab&display=swap");
 
 body {
@@ -6,6 +7,15 @@ body {
   grid-template-columns: repeat(auto-fit, 448px);
   grid-gap: 1em;
   padding: 1em;
+}
+
+body > header {
+  grid-column: 1/-1;
+}
+
+body > header > pre {
+  max-height: 150px;
+  overflow: scroll;
 }
 
 * {
@@ -54,48 +64,49 @@ body {
 }
 
 .white {
-  --background: #e0d9bc;
-  --border: #fbfbfb;
-  --bar: #f3f3f5;
-  --text-box: #f3f3f5;
+  --background: #e9e4c6;
+  --border: #fffff4;
+  --bar: #f4f2f3;
+  --text-box: #f4f2f3;
 }
 
 .blue {
-  --background: #6099ea;
-  --border: #4b7ecf;
-  --bar: #bccdeb;
-  --text-box: #e2e0f6;
+  --background: #7bb7fd;
+  --border: #1069c5;
+  --bar: #b2c6e9;
+  --text-box: #e2e4f9;
 }
 
 .black {
-  --background: #343e40;
-  --border: #262626;
-  --bar: #aaa5a9;
-  --text-box: #e8e7ed;
+  --background: #282c45;
+  --border: #3f403a;
+  --bar: #c1b7b8;
+  --text-box: #e0dee3;
 }
 
 .red {
-  --background: #d14536;
-  --border: #e44438;
-  --bar: #dca89b;
-  --text-box: #f3dad3;
+  --background: #a33e2c;
+  --border: #e6401a;
+  --bar: #ecbea7;
+  --text-box: #f0e7de;
 }
 
 .green {
-  --background: #648568;
-  --border: #488273;
-  --bar: #b5c0c2;
-  --text-box: #d2e1e6;
+  --background: #7a9783;
+  --border: #3e7e63;
+  --bar: #bec6c8;
+  --text-box: #d4d9d5;
 }
 
 .gold {
   --text-box: rgb(226, 218, 189);
 }
 
-/* .white.blue.gold {
-  --text-box: linear-gradient(to left, #f3f3f5 40%, #e2e0f6 60%);
+.white.blue.gold {
+  /* --text-box: linear-gradient(to left, #f3f3f5 40%, #e2e0f6 60%); */
+  --border-image: linear-gradient(to left, #fffff4 40%, #1069c5 60%);
 }
-.blue.black.gold {
+/*.blue.black.gold {
   --text-box: linear-gradient(to left, #e2e0f6 40%, #e8e7ed 60%);
 }
 .black.green.gold {
@@ -106,17 +117,17 @@ body {
 } */
 
 .colorless {
-  --background: #fff4eb;
-  --border: #999089;
-  --bar: #bdb6bd;
-  --text-box: #c7c3c4;
+  --background: #9db2cd;
+  --border: #d4d2dd;
+  --bar: #bbc2d2;
+  --text-box: #bfcbd9;
 }
 
 .gold {
-  --background: #f1d67f;
-  /* --border: #564b39; */
-  --border: #c6b780;
-  --bar: #afa369;
+  --background: #c29e54;
+  --border: #f3e57c;
+  --bar: #c1ad68;
+  --text-box: #f0e7d6;
 }
 
 .border {
@@ -129,12 +140,19 @@ body {
   font-size: calc(var(--ratio) * 9.5);
   display: grid;
   grid-template-rows: repeat(5, auto);
+  z-index: 2;
+}
+
+.border > *,
+.border > * *:not(::before) {
+  z-index: 50;
 }
 
 .planeswalker .card-image {
-  border-width: calc(var(--ratio) * 3);
+  border-width: calc(var(--ratio) * 2);
   border-radius: calc(var(--ratio) * 10) / calc(var(--ratio) * 100);
-  margin: 0 calc(var(--ratio));
+  margin: 0 calc(var(--ratio) * 2);
+  overflow: hidden;
 }
 
 .card-image {
@@ -144,36 +162,75 @@ body {
   height: calc(var(--ratio) * 154);
   display: grid;
   place-items: center;
-  overflow: hidden;
 }
 .card-image > img {
-  width: 100%;
+  display: block;
+  /* margin: calc(var(--ratio) * -3); */
+  border: calc(var(--ratio) * 0.5) solid black;
+  width: calc(100% - var(--ratio) * 1);
 }
-
-.mana-cost > * {
-  display: inline;
+.manacost {
+  font-size: 0.9em;
+}
+.manacost > * {
+  display: inline-block;
 }
 
 .bar {
   display: grid;
-  margin: calc(var(--ratio) * 4) calc(var(--ratio));
+  margin: calc(var(--ratio) * 4) calc(var(--ratio) * 2);
   border-radius: calc(var(--ratio) * 8) / calc(var(--ratio) * 16);
   border: calc(var(--ratio) * 1) solid var(--border);
+  border-image: var(--border-image);
   background: var(--bar);
   padding: calc(var(--ratio) * 2) calc(var(--ratio) * 4);
   grid-template-columns: 1fr auto;
   align-items: center;
-  box-shadow: /*                                                                         */ inset
-      calc(var(--ratio) * -0.1) calc(var(--ratio) * 0.2) calc(var(--ratio) * 1)
-      rgba(255, 255, 255, 1),
-    inset calc(var(--ratio) * 0.1) calc(var(--ratio) * -0.2)
-      calc(var(--ratio) * 1) rgba(0, 0, 0, 1);
+  box-shadow: inset calc(var(--ratio) * -1.1) calc(var(--ratio) * 1.2)
+      calc(var(--ratio) * 1) rgba(255, 255, 255, 0.2),
+    inset calc(var(--ratio) * 1.1) calc(var(--ratio) * -1.2)
+      calc(var(--ratio) * 1) rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+.bar::before {
+  border-radius: calc(var(--ratio) * 8) / calc(var(--ratio) * 16);
+}
+
+.bar,
+.card-text,
+.card-image {
+  position: relative;
+  z-index: 5;
+}
+.card-image,
+.card-text {
+  z-index: 4;
+}
+.bar::before,
+.card-text::before,
+.card-image::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: calc(var(--ratio) * -1);
+  left: calc(var(--ratio) * -1);
+  right: calc(var(--ratio) * 1);
+  bottom: calc(var(--ratio) * 1);
+  width: calc(100%);
+  height: calc(100% + var(--ratio) * 2);
+  /* border: calc(var(--ratio) * 1) solid var(--border);
+  border-top: none;
+  border-bottom: none; */
+  box-shadow: calc(var(--ratio) * -1) 0px calc(var(--ratio) * 2)
+    calc(var(--ratio) * 1) rgba(0, 0, 0, 0.5);
+  z-index: 3;
 }
 
 .card-text {
   height: calc(var(--ratio) * 105);
   margin: 0 calc(var(--ratio) * 5) calc(var(--ratio) * -12);
   border: calc(var(--ratio) * 1) solid var(--border);
+  /* -webkit-border-image: var(--border-image); */
   display: grid;
   grid-template-rows: 2fr 8px 1fr;
   border-top: none;
@@ -183,7 +240,6 @@ body {
   background-repeat: repeat;
   padding: calc(var(--ratio) * 4);
   font-family: serif;
-  position: relative;
   box-shadow: inset calc(var(--ratio) * 0.1) calc(var(--ratio) * -0.2)
       calc(var(--ratio) * 1) rgba(255, 255, 255, 1),
     inset calc(var(--ratio) * -0.1) calc(var(--ratio) * 0.2)
@@ -288,7 +344,7 @@ hr {
   font-size: calc(1em / 2.8);
   font-weight: bold;
   color: white;
-  z-index: 2;
+  z-index: 5;
 }
 
 .ms-loyalty-start + span {
@@ -301,6 +357,7 @@ hr {
 .loyalty-thing > * {
   grid-column: 1/-1;
   grid-row: 1/-1;
+  z-index: 5;
 }
 
 .pt {
@@ -322,6 +379,7 @@ hr {
   float: right;
   bottom: calc(var(--ratio) * -12);
   right: calc(var(--ratio) * -4);
+  z-index: 5;
 }
 
 .pt > * {
@@ -384,7 +442,7 @@ hr {
   /* margin: 1rem; */
   /* padding: 2rem; */
   position: relative;
-  font-family: 'Roboto';
+  font-family: "Roboto";
 }
 
 .proxy-bar {
@@ -393,7 +451,7 @@ hr {
   margin: -1px calc(var(--ratio) * -2);
   padding: 0 1rem;
   height: 30px;
-  width: calc(100% + var(--ratio) * 4);  
+  width: calc(100% + var(--ratio) * 4);
   border-radius: calc(var(--ratio) * 8) / calc(var(--ratio) * 16);
   border: 1px solid black;
   line-height: 30px;
@@ -414,7 +472,7 @@ hr {
 .proxy-loyalty {
   display: block;
   background-color: white;
-  margin: -15px 0 -1px auto ;
+  margin: -15px 0 -1px auto;
   padding: 0 1rem;
   height: 30px;
   border: 1px solid black;
@@ -425,7 +483,7 @@ hr {
 .proxy-pt {
   display: block;
   background-color: white;
-  margin: -15px calc(var(--ratio) * -2) -1px auto ;
+  margin: -15px calc(var(--ratio) * -2) -1px auto;
   padding: 0 1rem;
   height: 30px;
   border-radius: calc(var(--ratio) * 8) / calc(var(--ratio) * 16);
