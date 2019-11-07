@@ -1,11 +1,17 @@
 @import url("//cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css");
 @import url("https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab&display=swap");
 
+@media only print {
+  body > header {
+    display: none;
+  }
+}
+
 body {
   background: white;
   display: grid;
   grid-template-columns: repeat(auto-fit, 448px);
-  grid-gap: 1em;
+  grid-gap: 1.8rem .1rem;
   padding: 1em;
 }
 
