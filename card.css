@@ -7,6 +7,16 @@
   }
 }
 
+.toggle { 
+  pointer-events: none;
+}
+:not(.on) > .toggle::before {
+  content: "(off)";
+}
+.on > .toggle::before {
+  content: "(on)";
+}
+
 body {
   background: white;
   display: grid;
@@ -28,18 +38,37 @@ body {
 }
 
 body > header {
-  grid-column: 1/-1;
+  padding: 1rem;
+  font-family: sans-serif;
+  background: #222;
+  color: #fff;
+  grid-column: 1 / -1;
 }
 
 body > header > pre {
+  background-color: #ddd;
+  color: #111;
+  padding: 1em;
   max-height: 150px;
   overflow: scroll;
+}
+
+body > header button {
+  padding: .4rem 1rem;
+}
+
+body > header > .sheet-query > * {
+  display: inline-block;
 }
 
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+
+*[hidden="true"] {
+  display: none !important;
 }
 
 .card-name,

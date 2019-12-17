@@ -2,28 +2,33 @@
 <html>
 
 <head>
-    <title>Google Sheets API Quickstart</title>
+    <title>Card Smith</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="./card.css">
 </head>
 
 <body>
     <header>
-        <p>Google Sheets API Quickstart</p>
+        <h1>
+            Card Smith
+            <button id="authorize_button" style="display: none;">Authorize</button>
+            <button id="signout_button" style="display: none;">Sign Out</button>
+        </h1>
 
-        <p>
+        <h2>Search</h2>
+        <p id="sheet-query">
             <label for="range">Range to get</label>
             <input type="text" name="range" id="search_range" placeholder="'Final Database'!B2:T9"
                 pattern="(?:(?:'[\w\s\d]+')|(?:[\S]+)!)?(?:[\w\d\S]+)(?:[\w\d\S]+)?">
             <button onclick="loadSheet()">Load Range</button>
         </p>
 
-
-        <!--Add buttons to initiate auth sequence and sign out-->
-        <button id="authorize_button" style="display: none;">Authorize</button>
-        <button id="signout_button" style="display: none;">Sign Out</button>
-        <button id="toggle_proxy">Toggle Proxy Mode</button>
-
+        <h2>Options</h2>
+        <p id="options">
+            <button id="toggle_proxy">Toggle Proxy Mode <span class="toggle"></span></button>
+            <label for="card-filter">Filter: </label>
+            <input type="text" name="card-filter" id="card-filter" oninput="updateFilter()">
+        </p>
         <pre id="content" style="white-space: pre-wrap;"></pre>
     </header>
 
@@ -46,7 +51,19 @@
             removeCards();
             document.body.classList.toggle("proxy");
             appendCards();
+            clickevent.srcElement.classList.toggle("on");
         })
+
+        function updateFilter() {
+            let filter = document.querySelector("#card-filter").value;
+            for (const card of document.querySelectorAll(".card, .proxy")) {
+                if (JSON.stringify(card.data).includes(filter)) {
+                    card.removeAttribute("hidden");
+                } else {
+                    card.setAttribute("hidden", "true");
+                }
+            }
+        }
 
         const input = document.querySelector("#search_range");
         const db = new Set();
@@ -115,11 +132,11 @@
         function updateSigninStatus(isSignedIn) {
             if (isSignedIn) {
                 authorizeButton.style.display = 'none';
-                signoutButton.style.display = 'block';
+                signoutButton.style.display = 'initial';
                 loadSheet();
             } else {
                 authorizeButton.style.display = 'block';
-                signoutButton.style.display = 'none';
+                signoutButton.style.display = 'initial';
             }
         }
 
@@ -160,6 +177,7 @@
                 var pre = document.getElementById('content');
                 document.body.appendChild(cardEl);
             }
+            updateFilter();
         }
 
         function removeCards() {
@@ -312,7 +330,7 @@
             let collectorInfo = $(`div`, `collector-info`, [ciline1, ciline2])
 
             let cardEl = $(`div`, `card ${color}${planeswalker ? " planeswalker" : ""}`, [cardBorder, collectorInfo]);
-
+            cardEl.data = cardData;
             applyMTGSymbols(cardEl);
             subCardName(cardEl, cardData.name);
             cardEl.querySelector(`.oracle`).innerHTML = oracle.innerHTML.replace(/ms-shadow/g, "");
@@ -338,6 +356,9 @@
             subCardName(oracle, cardData["name"])
 
             let proxy = $(`div`, `proxy`, [topbar, middlebar, oracle])
+
+            proxy.data = cardData;
+
             if (ptl) proxy.append(ptl);
             return proxy;
         }
