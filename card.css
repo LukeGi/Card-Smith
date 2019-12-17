@@ -30,9 +30,9 @@ body {
     display: none;
   }
   .card,
-  .proxy,
+  :not(body).proxy,
   .card *,
-  .proxy * {
+  :not(body).proxy * {
     display: initial;
   }
 }
