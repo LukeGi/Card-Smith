@@ -9,6 +9,18 @@ body {
   padding: 1em;
 }
 
+@media only print {
+  body * {
+    display: none;
+  }
+  .card,
+  .proxy,
+  .card *,
+  .proxy * {
+    display: initial;
+  }
+}
+
 body > header {
   grid-column: 1/-1;
 }
@@ -48,7 +60,7 @@ body > header > pre {
 }
 
 .set-symbol {
-  height: 100%;
+  height: calc(var(--ratio) * 10);
 }
 
 .card:before {
@@ -226,6 +238,13 @@ body > header > pre {
   z-index: 3;
 }
 
+.planeswalker .card-text::before {
+  margin-left: -1em;
+  padding-right: 1em;
+  border-bottom-left-radius: 1.5em;
+  border-bottom-right-radius: 1.5em;
+}
+
 .card-text {
   height: calc(var(--ratio) * 105);
   margin: 0 calc(var(--ratio) * 5) calc(var(--ratio) * -12);
@@ -248,6 +267,8 @@ body > header > pre {
 
 .planeswalker .card-text {
   border-left-width: 1em;
+  border-bottom-left-radius: 1.5em;
+  border-bottom-right-radius: 1.5em;
 }
 
 .card-text > *:only-child {
@@ -276,7 +297,8 @@ body > header > pre {
   align-items: center;
 }
 
-.oracle hr {
+.oracle hr,
+.oracle .full-line {
   grid-column: 1/-1;
 }
 
@@ -347,6 +369,12 @@ hr {
   z-index: 5;
 }
 
+.ms-loyalty-up + span {
+  margin-bottom: 0.1em;
+}
+.ms-loyalty-zero + span {
+  margin-bottom: 0.4em;
+}
 .ms-loyalty-start + span {
   margin-bottom: 0.2em;
 }
@@ -430,7 +458,7 @@ hr {
   left: 0;
 }
 
-.proxy {
+:not(body).proxy {
   border: 2px solid black;
   display: grid;
   grid-template-rows: 1fr auto 250px 1rem;

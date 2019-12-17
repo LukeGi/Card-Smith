@@ -22,6 +22,7 @@
         <!--Add buttons to initiate auth sequence and sign out-->
         <button id="authorize_button" style="display: none;">Authorize</button>
         <button id="signout_button" style="display: none;">Sign Out</button>
+        <button id="toggle_proxy">Toggle Proxy Mode</button>
 
         <pre id="content" style="white-space: pre-wrap;"></pre>
     </header>
@@ -40,7 +41,16 @@
 
         var authorizeButton = document.getElementById('authorize_button');
         var signoutButton = document.getElementById('signout_button');
+        var toggleProxyButton = document.getElementById('toggle_proxy');
+        toggleProxyButton.addEventListener("click", function (clickevent) {
+            removeCards();
+            document.body.classList.toggle("proxy");
+            appendCards();
+        })
+
         const input = document.querySelector("#search_range");
+        const db = new Set();
+
         input.value = "'Final Database'!B2:T4";
         function loadSheet() {
             if (!new RegExp(input.pattern).test(input.value)) {
@@ -60,9 +70,11 @@
                     for (let col in result.values[0]) {
                         card[result.values[0][col]] = result.values[row][col];
                     }
-                    appendCard(card);
+                    db.add(card);
                     appendPre(JSON.stringify(card));
                 }
+                removeCards();
+                appendCards();
             })
         }
 
@@ -137,11 +149,25 @@
             pre.appendChild(textContent);
         }
 
-        function appendCard(card) {
-            let cardEl = generateCard(card);
-            var pre = document.getElementById('content');
-            document.body.appendChild(cardEl);
+        function appendCards() {
+            for (const card of db) {
+                let cardEl
+                if (document.body.classList.contains("proxy")) {
+                    cardEl = generateProxy(card);
+                } else {
+                    cardEl = generateCard(card);
+                }
+                var pre = document.getElementById('content');
+                document.body.appendChild(cardEl);
+            }
         }
+
+        function removeCards() {
+            for (const card of document.querySelectorAll(".card, :not(body).proxy")) {
+                card.remove();
+            }
+        }
+
         const $ = (type, classes = "", content = undefined) => {
             let el = document.createElement(type);
             if (classes.length > 0) {
@@ -227,27 +253,28 @@
             let mOracle = cardData.oracle.replace(`{{CARD NAME}}`, cardData.name)
             let lines = mOracle.split(`<br>`);
             for (let line of lines) {
-                if (planeswalker) {
-                    let parts = line.split(`:`);
-                    if (parts.length == 2) {
-                        let cost = parts[0].trim();
-                        if (cost < 0) {
-                            oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-down"), $("span", "", cost)]));
-                        } else if (cost > 0) {
-                            oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-up"), $("span", "", cost)]));
-                        } else {
-                            oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-zero"), $("span", "", cost)]));
-                        }
-                        oracleContent.push($(`p`, ``, `:`));
-                        let abilityText = $(`p`, ``, parts[1].trim());
-                        abilityText.style.fontSize = `calc(var(--ratio) * (9.5 - ${abilityText.textContent.length / 100}))`;
-                        oracleContent.push(abilityText);
-                        oracleContent.push($(`hr`));
+                if (planeswalker && line.includes(":")) {
+                    let parts = line.split(":");
+                    let cost = parts[0].trim();
+                    if (cost < 0) {
+                        oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-down"), $("span", "", cost)]));
+                    } else if (cost > 0) {
+                        oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-up"), $("span", "", cost)]));
+                    } else {
+                        oracleContent.push($("span", `loyalty-thing`, [$("i", "ms ms-loyalty-zero"), $("span", "", cost)]));
                     }
+                    oracleContent.push($(`p`, ``, `:`));
+                    let abilityText = $(`p`, ``, parts[1].trim());
+                    abilityText.style.fontSize = `calc(var(--ratio) * (9.5 - ${abilityText.textContent.length / 100}))`;
+                    oracleContent.push(abilityText);
                 } else {
                     let lineEl = $(`p`, ``, () => line);
+                    lineEl.classList.add("full-line");
                     lineEl.style.fontSize = `calc(var(--ratio) * (9.5 - ${Math.min(mOracle.length / (10 * lines.length), .5)}))`;
                     oracleContent.push(lineEl);
+                }
+                if (planeswalker) {
+                    oracleContent.push($(`hr`));
                 }
             }
             // Remove the last final hr on a planeswalker
@@ -290,6 +317,29 @@
             subCardName(cardEl, cardData.name);
             cardEl.querySelector(`.oracle`).innerHTML = oracle.innerHTML.replace(/ms-shadow/g, "");
             return cardEl;
+        }
+
+        function generateProxy(cardData) {
+
+            let topbar = $(`div`, `proxy-bar proxy-top`, [$(`p`, `left`, cardData[`name`]), $(`p`, `right`, cardData[`manacost`])])
+
+            let middlebar = $(`div`, `proxy-bar proxy-middle`, [$(`p`, `left`, cardData[`typeline`]), $(`p`, `right`, cardData[`rarity`])])
+
+            let oracle = $(`div`, `proxy-oracle`, cardData[`oracle`].replace(`{{CARD NAME}}`, cardData[`name`]).split(`<br>`).map(line => $(`p`, `proxy-line`, () => line)));
+
+            let ptl;
+
+            if (cardData[`loyalty`]) {
+                ptl = $(`div`, `proxy-loyalty`, cardData[`loyalty`]);
+            } else if (cardData[`power`]) {
+                ptl = $(`div`, `proxy-pt`, `${cardData[`power`]}/${cardData[`toughness`]}`)
+            }
+
+            subCardName(oracle, cardData["name"])
+
+            let proxy = $(`div`, `proxy`, [topbar, middlebar, oracle])
+            if (ptl) proxy.append(ptl);
+            return proxy;
         }
 
     </script>
