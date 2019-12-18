@@ -18,7 +18,7 @@
         <h2>Search</h2>
         <p id="sheet-query">
             <label for="range">Range to get</label>
-            <input type="text" name="range" id="search_range" placeholder="'Final Database'!B2:T9"
+            <input type="text" name="range" id="search_range" placeholder="'Final Database'!B2:T12"
                 pattern="(?:(?:'[\w\s\d]+')|(?:[\S]+)!)?(?:[\w\d\S]+)(?:[\w\d\S]+)?">
             <button onclick="loadSheet()">Load Range</button>
         </p>
@@ -48,15 +48,15 @@
         var signoutButton = document.getElementById('signout_button');
         var toggleProxyButton = document.getElementById('toggle_proxy');
         toggleProxyButton.addEventListener("click", function (clickevent) {
+            clickevent.srcElement.classList.toggle("on");
             removeCards();
             document.body.classList.toggle("proxy");
             appendCards();
-            clickevent.srcElement.classList.toggle("on");
         })
 
         function updateFilter() {
             let filter = document.querySelector("#card-filter").value;
-            for (const card of document.querySelectorAll(".card, .proxy")) {
+            for (const card of document.querySelectorAll(".card, :not(body).proxy")) {
                 if (JSON.stringify(card.data).includes(filter)) {
                     card.removeAttribute("hidden");
                 } else {
@@ -68,7 +68,7 @@
         const input = document.querySelector("#search_range");
         const db = new Set();
 
-        input.value = "'Final Database'!B2:T4";
+        // input.value = "'Final Database'!B2:T4";
         function loadSheet() {
             if (!new RegExp(input.pattern).test(input.value)) {
                 appendPre("The entered range is not valid.");
@@ -347,10 +347,10 @@
 
             let ptl;
 
-            if (cardData[`loyalty`]) {
-                ptl = $(`div`, `proxy-loyalty`, cardData[`loyalty`]);
-            } else if (cardData[`power`]) {
-                ptl = $(`div`, `proxy-pt`, `${cardData[`power`]}/${cardData[`toughness`]}`)
+            if (cardData[`l`]) {
+                ptl = $(`div`, `proxy-loyalty`, cardData[`l`]);
+            } else if (cardData[`p`]) {
+                ptl = $(`div`, `proxy-pt`, `${cardData[`p`]}/${cardData[`t`]}`)
             }
 
             subCardName(oracle, cardData["name"])
