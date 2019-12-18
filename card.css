@@ -26,14 +26,11 @@ body {
 }
 
 @media only print {
-  body * {
+  *:not(.card),
+  *:not(.proxy:not(body)),
+  *:not(.card) *,
+  *:not(.proxy:not(body)) * {
     display: none;
-  }
-  .card,
-  :not(body).proxy,
-  .card *,
-  :not(body).proxy * {
-    display: initial;
   }
 }
 
